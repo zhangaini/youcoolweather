@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="#fff"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+    <!--因为遍历全国省市县的功能会复用所以写在碎片里面 需要复用的时候直接在布局里面应用碎片就可以了 代码复用率提高-->
+    <!--之所以要自定义标题栏是因为在碎片中最好不要直接使用ActionBar或者Toolbar 不然有可能会出现一些不想看到的效果-->
+    <!--为什么不用RecyclerView呢更加方便不用自己写ViewHolder 因为在ListView中有分割线。但是个人觉得你可以在RecyclerView中给每个Item设置一个marginTop 背景色调一下也可以做到类似分隔线的效果-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/title_text"
+            android:layout_centerInParent="true"
+            android:textColor="#fff"
+            android:textSize="20sp"
+            android:text="？"
+            />
+        <Button
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:id="@+id/back_button"
+            android:layout_marginLeft="10dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/backbutton"
+            />
+
+    </RelativeLayout>
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/list_view"
+        />
+
+</LinearLayout>
