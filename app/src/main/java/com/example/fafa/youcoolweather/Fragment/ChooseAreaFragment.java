@@ -95,7 +95,7 @@ public class ChooseAreaFragment extends Fragment {
             public void onClick(View v) {//点击返回按钮只是更新了不同的数据并没有切换页面
                 if (currentLevel==LEVEE_COUNTY)
                     queryCities();
-                if (currentLevel==LEVEL_CITY)
+              else  if (currentLevel==LEVEL_CITY)
                     queryProvinces();
             }
         });
@@ -158,7 +158,7 @@ public class ChooseAreaFragment extends Fragment {
     private void queryCounties() {
         titleText.setText(citySelected.getCityName());
         backButton.setVisibility(View.VISIBLE);
-        countyList=DataSupport.where("city = ?",String.valueOf(citySelected.getId())).find(County.class);
+        countyList=DataSupport.where("cityid = ?",String.valueOf(citySelected.getId())).find(County.class);
         if(countyList.size()>0){
             dataList.clear();
             for (County county:countyList
@@ -173,7 +173,7 @@ public class ChooseAreaFragment extends Fragment {
         }else{
             int provinceCode=provinceSelected.getProvinceCode();
             int cityCode=citySelected.getCityCode();
-            String address="http://guolin.tech/api/china"+provinceCode+"/"+cityCode;
+            String address="http://guolin.tech/api/china/"+provinceCode+"/"+cityCode;
             queryFromServer(address,"county");
         }
     }
