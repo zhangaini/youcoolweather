@@ -1,23 +1,26 @@
 package com.example.fafa.youcoolweather;
 
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
+import com.bumptech.glide.Glide;
 import com.example.fafa.youcoolweather.gson.Forecast;
 import com.example.fafa.youcoolweather.gson.Weather;
 import com.example.fafa.youcoolweather.util.Httputil;
 import com.example.fafa.youcoolweather.util.Utility;
-
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 
@@ -27,6 +30,7 @@ import okhttp3.Response;
 
 public class WeatherActivity extends AppCompatActivity {
 
+    private ImageView backImage;
     private ScrollView weatherLayout;
     private TextView titleCity;
     private TextView titleUpdateTime;
@@ -43,6 +47,13 @@ public class WeatherActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (Build.VERSION.SDK_INT>=21){
+            View decorView =getWindow().getDecorView();
+            decorView.setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+            );
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+        }
         setContentView(R.layout.activity_weather);
         weatherLayout = (ScrollView) findViewById(R.id.weather_layout);
         titleCity = (TextView) findViewById(R.id.title_city);
@@ -55,7 +66,16 @@ public class WeatherActivity extends AppCompatActivity {
         comfortText = (TextView) findViewById(R.id.comfort_text);
         carWashText = (TextView) findViewById(R.id.car_wash_text);
         sportText = (TextView) findViewById(R.id.sport_text);
+        backImage=(ImageView)findViewById(R.id.back_image) ;
         SharedPreferences prefs= PreferenceManager.getDefaultSharedPreferences(this);
+        String backImageSrc=prefs.getString("back_image",null);
+        if (backImageSrc!=null){
+            Glide.with(this).load(backImageSrc).into(backImage);
+        }
+        else{
+            Log.e(TAG, "onCreate: "+"正在加载图片" );
+            loadBackImage();
+        }
         String weatherString =prefs.getString("weather",null);
         if(weatherString!=null){
             //有缓存的时候直接解析天气的数据
@@ -69,6 +89,37 @@ public class WeatherActivity extends AppCompatActivity {
             requestWeather(weatherId);
         }
 
+    }
+
+    private void loadBackImage() {
+        String requestImage ="http://guolin.tech/api/bing_pic";
+        Httputil.sendOkHttpRequest(requestImage, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(WeatherActivity.this, "加载图片失败", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                final String pic=response.body().string();
+                Log.e(TAG, "图片路径: "+pic );
+                SharedPreferences.Editor editor=PreferenceManager.getDefaultSharedPreferences(WeatherActivity.this).edit();
+                editor.putString("back_image",pic);
+                editor.apply();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Glide.with(WeatherActivity.this).load(pic).into(backImage);
+                    }
+                });
+
+            }
+        });
     }
 
     //根据天气的id请求城市天气信息
@@ -112,6 +163,7 @@ public class WeatherActivity extends AppCompatActivity {
 
 
         });
+        loadBackImage();
     }
 
     //处理并且展示天气的信息
