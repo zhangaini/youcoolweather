@@ -1,6 +1,7 @@
 package com.example.fafa.youcoolweather.Fragment;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.fafa.youcoolweather.R;
+import com.example.fafa.youcoolweather.WeatherActivity;
 import com.example.fafa.youcoolweather.db.City;
 import com.example.fafa.youcoolweather.db.County;
 import com.example.fafa.youcoolweather.db.Province;
@@ -87,6 +89,13 @@ public class ChooseAreaFragment extends Fragment {
                 else if(currentLevel==LEVEL_CITY){
                     citySelected=cityList.get(position);
                     queryCounties();
+                }
+                else  if (currentLevel==LEVEE_COUNTY){
+                    String weatherId=countyList.get(position).getWeatherId();
+                    Intent intent =new Intent(getActivity(), WeatherActivity.class);
+                    intent.putExtra("weather_id",weatherId);
+                    startActivity(intent);
+                    getActivity().finish();
                 }
             }
         });

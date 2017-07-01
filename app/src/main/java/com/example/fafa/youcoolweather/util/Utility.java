@@ -6,6 +6,8 @@ import android.util.Log;
 import com.example.fafa.youcoolweather.db.City;
 import com.example.fafa.youcoolweather.db.County;
 import com.example.fafa.youcoolweather.db.Province;
+import com.example.fafa.youcoolweather.gson.Weather;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -80,4 +82,20 @@ public class Utility {
         return false;
     }
 
+    public static Weather handleWeatherResponse(String response){
+        try {
+            Log.e("TAG", "handleWeatherResponse: 进来没有" );
+            JSONObject jsonObject=new JSONObject(response);
+            Log.e("TAG", "handleWeatherResponse: "+"second");
+            JSONArray jsonArray=jsonObject.getJSONArray("HeWeather");
+            Log.e("TAG", "handleWeatherResponse: "+"third");
+            String weatherContent = jsonArray.getJSONObject(0).toString();
+            return new Gson().fromJson(weatherContent,Weather.class);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
 }
