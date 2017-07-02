@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.GravityCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.fafa.youcoolweather.MainActivity;
 import com.example.fafa.youcoolweather.R;
 import com.example.fafa.youcoolweather.WeatherActivity;
 import com.example.fafa.youcoolweather.db.City;
@@ -92,10 +94,22 @@ public class ChooseAreaFragment extends Fragment {
                 }
                 else  if (currentLevel==LEVEE_COUNTY){
                     String weatherId=countyList.get(position).getWeatherId();
+                    if (getActivity()instanceof MainActivity){
                     Intent intent =new Intent(getActivity(), WeatherActivity.class);
                     intent.putExtra("weather_id",weatherId);
                     startActivity(intent);
                     getActivity().finish();
+                    }
+                    else if(getActivity()instanceof WeatherActivity){
+                        WeatherActivity activity= (WeatherActivity) getActivity();
+                        activity.drawerLayout.closeDrawer(GravityCompat.START);
+                        activity.reFresh.setRefreshing(true);
+                        activity.mWeatherId=weatherId;
+                        activity.requestWeather(weatherId);
+                        //这里运用了一个if  else的判断来判断当前的碎片是在Mainactivity还是WeatherActivity
+                        //来确定是否关闭滑动菜单
+                    }
+
                 }
             }
         });

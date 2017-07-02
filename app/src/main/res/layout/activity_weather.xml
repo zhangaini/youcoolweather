@@ -12,6 +12,16 @@
         android:id="@+id/back_image"
         android:scaleType="centerCrop"
         />
+    <android.support.v4.widget.DrawerLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/drawer_layout"
+        >
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/my_swipe_refresh"
+        >
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -38,4 +48,16 @@
 
 
     </ScrollView>
+    </android.support.v4.widget.SwipeRefreshLayout>
+        <fragment
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:name="com.example.fafa.youcoolweather.Fragment.ChooseAreaFragment"
+            android:id="@+id/drawer_choose_fragment"
+            >
+
+
+        </fragment>
+    </android.support.v4.widget.DrawerLayout>
 </FrameLayout>
