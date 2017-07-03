@@ -1,5 +1,6 @@
 package com.example.fafa.youcoolweather;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
@@ -197,6 +198,11 @@ public class WeatherActivity extends AppCompatActivity {
     //处理并且展示天气的信息
     private void showWeatherInfo(Weather weather) {
 
+        if (weather!=null&&"ok".equals(weather.status)){
+            Intent intent =new Intent(this,AutoUpdateService.class);
+            startService(intent);
+            //启动后台服务
+        }
         String cityName =weather.basic.cityName;
         Log.e(TAG, "showWeatherInfo: "+weather.aqi );
         String updateTime=weather.basic.update.updateTime.split(" ")[1];//通过空格分开 取第二个元素
